@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "body-parser": "^2.2.2",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "http-errors": "^2.0.1"
   },
