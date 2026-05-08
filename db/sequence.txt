@@ -6,3 +6,5 @@ Simple GET route to grab data from Postgres
 
 INSERT INTO users (password, email, firstname, lastname, created, modified)
 VALUES ('bobbicup194~!X[]', 'shaniakennedy@outlook.com', 'Shania', 'Kennedy', '2022-01-26', '2026-04-27');
+
+iniital commit for 5/8/2026
