@@ -1,2 +1,8 @@
-create a database: ecommerce
+Build out api endpoints: get, put, post, delete for each tables
 
+Lets start with USERS:
+Simple GET route to grab data from Postgres
+- using PG
+
+INSERT INTO users (password, email, firstname, lastname, created, modified)
+VALUES ('bobbicup194~!X[]', 'shaniakennedy@outlook.com', 'Shania', 'Kennedy', '2022-01-26', '2026-04-27');
