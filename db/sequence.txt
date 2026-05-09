@@ -4,7 +4,5 @@ Lets start with USERS:
 Simple GET route to grab data from Postgres
 - using PG
 
-INSERT INTO users (password, email, firstname, lastname, created, modified)
-VALUES ('bobbicup194~!X[]', 'shaniakennedy@outlook.com', 'Shania', 'Kennedy', '2022-01-26', '2026-04-27');
-
-iniital commit for 5/8/2026
+INSERT INTO orders (created, modified, total, status, userId)
+VALUES ('2025-11-26', '2025-12-27', 299.99, 'returned', 1);
