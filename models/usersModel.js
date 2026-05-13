@@ -48,7 +48,39 @@ module.exports = class UserModel {
   // Find user record by email
   async findUserByEmail(email) {
     try {
-        const statement // stopped here 23:00 5.8.26
+        const statement = 'SELECT * FROM users WHERE email = $1';
+        const values = [email];
+
+        // Execute SQL statement
+        const result = await db.query(statement, values);
+
+        // Ensure if rows are undefined or zero, doesn't crash server
+        if (result.rows?.length) {
+            return result.rows[0];
+        }
+
+        return null;
+
+    } catch(err) {
+        throw new Error(err);
+    }
+  }
+
+  async findUserById(id) {
+    try {
+        const statement = 'SELECT * FROM users WHERE id = $1';
+        const values = [id];
+
+        // Execute SQL statement
+        const result = await db.query(statement, values);
+
+        // Ensure if rows are undefined or zero, doesn't crash server
+        if (result.rows?.length) {
+            return result.rows[0];
+        }
+
+        return null;
+
     } catch(err) {
         throw new Error(err);
     }
