@@ -84,5 +84,23 @@ module.exports = class UserModel {
     } catch(err) {
         throw new Error(err);
     }
+  };
+
+  // Get all users for /users route
+  async findAllUsers() {
+    try {
+        const statement = 'SELECT * FROM users';
+
+        const result = await db.query(statement);
+
+        if (result.rows?.length) {
+            return result.rows;
+        }
+
+        return null;
+
+    } catch (err) {
+        throw new Error(err);
+    }
   }
 };

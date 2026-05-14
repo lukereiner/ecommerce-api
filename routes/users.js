@@ -1,96 +1,41 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const UserService = require('../services/UserService');
+const UserService = require("../services/UserService");
 
 const UserServiceInstance = new UserService();
 
 module.exports = (app) => {
-    app.use('/users', router);
+  app.use("/users", router);
 
-    router.get('/:id', async (req, res, next) => {
-        try {
-            const { id } = req.params;
-
-            const response = await UserServiceInstance.get({ id: id});
-            res.status(200).send(response);
-        } catch (err) {
-            next(err);
-        }
-    });
-
-    router.put('/:id', async (req, res, next) => {
-        try {
-            const { id } = req.params;
-            const data = req.body;
-
-            const response = await UserServiceInstance.update({ id: id, ...data });
-            res.status(200).send(response);
-        } catch (err) {
-            next(err);
-        }
-    });
-}
-
-router.get('/', async (req, res) => {
+  router.get("/", async (req, res, next) => {
     try {
-        const result = await pool.query('SELECT * FROM users');
-        res.json(result.rows);
+      const response = await UserServiceInstance.getAll();
+      res.status(200).send(response);
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error')
+      next(err);
     }
-});
+  });
 
-router.get('/:id', async (req, res) => {
-    const userId = req.params.id;
-
+  router.get("/:id", async (req, res, next) => {
     try {
-        const queryText = 'SELECT * FROM users WHERE id = $1';
-        const values = [userId];
+      const { id } = req.params;
 
-        const result = await pool.query(queryText, values);
-        res.json(result.rows);
+      const response = await UserServiceInstance.get({ id: id });
+      res.status(200).send(response);
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
+      next(err);
     }
-});
+  });
 
-router.put('/:id', async (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
-
-    // 1. Filter out keys that are null, undefined, or empty strings
-    const keys = Object.keys(updates).filter(
-        (key) => updates[key] !== undefined && updates[key] !== null && updates[key] !== ''
-    );
-
-    if (keys.length === 0) {
-        return res.status(400).json({ message: 'No valid fields provided for update' });
-    }
-
-    // 2. Build the SET clause: "password = $1, email = $2..."
-    const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
-    
-    // 3. Collect the values in the same order as the keys
-    const values = keys.map((key) => updates[key]);
-
+  router.put("/:id", async (req, res, next) => {
     try {
-        // 4. Add the ID as the final parameter for the WHERE clause
-        values.push(id);
-        const query = `UPDATE users SET ${setClause} WHERE id = $${values.length} RETURNING *`;
+      const { id } = req.params;
+      const data = req.body;
 
-        const result = await pool.query(query, values);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.json(result.rows[0]);
+      const response = await UserServiceInstance.update({ id: id, ...data });
+      res.status(200).send(response);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
+      next(err);
     }
-});
-
-module.exports = router;
+  });
+};
