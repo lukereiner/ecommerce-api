@@ -5,8 +5,6 @@ const { PORT } = require('./config')
 
 const startServer = async() => {
 
-    app.use(express.json());
-
     await loaders(app);
 
     app.listen(PORT, () => {

@@ -5,6 +5,7 @@ const UserService = require("../services/UserService");
 const UserServiceInstance = new UserService();
 
 module.exports = (app) => {
+  app.use(express.json());
   app.use("/users", router);
 
   router.get("/", async (req, res, next) => {
