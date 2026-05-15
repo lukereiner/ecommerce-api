@@ -23,3 +23,6 @@ Git and GitHub
 Command line
 Express
 PostgreSQL
+---
+INSERT INTO products (name, price, description, created, modified)
+VALUES ('PlayStation 2', 199.99, 'Enter a new world of gaming', '2000-11-23', '2001-01-02');

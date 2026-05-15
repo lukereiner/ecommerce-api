@@ -1,6 +1,0 @@
-3. Design the database
-- tables: user, order -> orderItem, product -> cartItem & orderItem, cart -> cartItem
-
-4. Create PostgreSQL database and tables
-- This is the actual setup process. Connect what I designed into an running PSQL instance
-
