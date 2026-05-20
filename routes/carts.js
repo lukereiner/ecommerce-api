@@ -8,10 +8,23 @@ module.exports = (app) => {
   app.use(express.json());
   app.use("/carts", router);
 
-  router.post("/", async (req, res, next) => {
+  router.post("/mine", async (req, res, next) => {
     try {
-      const response = await CartServiceInstance.create();
+      const { userId } = req.body;
+
+      const response = await CartServiceInstance.create(userId);
       res.status(201).send(response);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.get("/mine", async (req, res, next) => {
+    try {
+      const { userId } = req.body; // this will change to use auth so other user's carts cannot by viewed by anyone - this doesn't work bc body is data to be sent. Needs to be cleaned up in three files for when auth is added
+
+      const response = await CartServiceInstance.getCartByUser(userId);
+      res.status(200).send(response);
     } catch (err) {
       next(err);
     }

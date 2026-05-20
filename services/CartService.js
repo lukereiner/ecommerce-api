@@ -3,15 +3,29 @@ const CartModel = require("../models/cartsModel");
 const CartModelInstance = new CartModel();
 
 module.exports = class CartService {
-  async create() {
+  async create(userId) {
     try {
-      const carts = await CartModelInstance.create();
+      const cart = await CartModelInstance.create(userId);
 
-      if (!carts) {
-        throw createError(404, "No carts in database");
+      if (!cart) {
+        throw createError(404, "No cart in database");
       }
 
-      return carts;
+      return cart;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getCartByUser(userId) {
+    try {
+      const cart = await CartModelInstance.getCartUser(userId);
+
+      if (!cart) {
+        throw createError(404, "No cart for this user");
+      }
+
+      return cart;
     } catch (err) {
       throw err;
     }
