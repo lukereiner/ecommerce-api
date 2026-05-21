@@ -40,4 +40,31 @@ module.exports = (app) => {
       next(err);
     }
   });
+
+  // CART ITEMS MODEL
+  router.post("/mine/items", async (req, res, next) => {
+    try {
+      const data = req.body;
+
+      // Passing as a clean object
+      const response = await CartServiceInstance.addItems(data);
+
+      res.status(201).send(response);
+    } catch (err) {
+      res.status(400).send('The provided Cart ID or Product ID does not exist.')
+      next(err);
+    }
+  });
+
+  router.patch("/mine/items/:cartItemId", async (req, res, next) => {
+    try {
+      const { cartItemId } = req.params;
+      const data = req.body;
+
+      const response = await CartServiceInstance.updateItems({ cartItemId, ...data })
+      res.status(200).send(response);
+    } catch (err) {
+      next(err);
+    }
+  })
 };
