@@ -1,0 +1,66 @@
+const db = require("../db/myPool");
+const pgp = require("pg-promise")({ capSQL: true });
+
+module.exports = class CartItemsModel {
+  // create new cart item record
+  async create(data) {
+    const { cartId, productId, qty } = data;
+
+    try {
+      const statement = `
+        INSERT INTO cart_items (cartid, productid, qty)
+        VALUES ($1, $2, $3)
+        RETURNING cartid, productid, qty
+        `;
+
+      const result = await db.query(statement, [cartId, productId, qty]);
+
+      if (result.rows?.length) {
+        return result.rows[0];
+      }
+
+      return null;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async update(data) {
+    const { cartItemId, ...body } = data;
+
+    try {
+        const condition = pgp.as.format(" WHERE id = ${cartItemId} RETURNING *", { cartItemId });
+      const statement =
+        pgp.helpers.update(body, null, "cart_items") + condition;
+
+      const result = await db.query(statement);
+
+      if (result.rows?.length) {
+      const row = result.rows[0];
+
+      // Format the dates specifically to America/New_York
+      const easternFormatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        fractionalSecondDigits: 3,
+        hour12: false
+      });
+
+      // Override the raw Date objects with Eastern string formats if they exist
+      if (row.created) row.created = easternFormatter.format(new Date(row.created));
+      if (row.modified) row.modified = easternFormatter.format(new Date(row.modified));
+
+      return row;
+    }
+
+      return null;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+};

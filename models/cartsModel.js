@@ -3,14 +3,36 @@ const pgp = require("pg-promise")({ capSQL: true });
 
 module.exports = class CartModel {
     // create new cart
-    async create() {
+    async create(userId) {
         try {
-            const statement = "INSERT INTO carts DEFAULT VALUES RETURNING cartid, created, modified";
+            const statement = `
+            INSERT INTO carts (userid)
+            VALUES ($1)
+            RETURNING cartid, userid, created, modified
+            `;
 
-            const result = await db.query(statement);
+            const result = await db.query(statement, [userId]);
 
             if (result.rows?.length) {
                 return result.rows[0]
+            }
+
+            return null;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    // find cart by userID
+    async getCartUser(userId) {
+        try {
+            const statement = "SELECT * FROM carts WHERE userid = $1"
+            const values = [userId];
+
+            const result = await db.query(statement, values);
+
+            if (result.rows?.length) {
+                return result.row[0]
             }
 
             return null;
