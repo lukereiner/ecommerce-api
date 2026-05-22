@@ -30,7 +30,7 @@ async getCartItemsWithProducts(cartId) {
     try {
         const statement = `
             SELECT 
-                ci.id, ci.qty, ci.cartid, ci.productid,
+                ci.qty, ci.productid,
                 p.name, p.price, p.description
             FROM cart_items ci
             INNER JOIN products p ON ci.productid = p.id
