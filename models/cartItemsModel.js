@@ -25,38 +25,61 @@ module.exports = class CartItemsModel {
     }
   }
 
+  // get cart items with product details
+async getCartItemsWithProducts(cartId) {
+    try {
+        const statement = `
+            SELECT 
+                ci.id, ci.qty, ci.cartid, ci.productid,
+                p.name, p.price, p.description
+            FROM cart_items ci
+            INNER JOIN products p ON ci.productid = p.id
+            WHERE ci.cartid = $1
+        `;
+        const result = await db.query(statement, [cartId]);
+        return result.rows;
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+  // update cart
   async update(data) {
     const { cartItemId, ...body } = data;
 
     try {
-        const condition = pgp.as.format(" WHERE id = ${cartItemId} RETURNING *", { cartItemId });
+      const condition = pgp.as.format(" WHERE id = ${cartItemId} RETURNING *", {
+        cartItemId,
+      });
       const statement =
         pgp.helpers.update(body, null, "cart_items") + condition;
 
       const result = await db.query(statement);
 
       if (result.rows?.length) {
-      const row = result.rows[0];
+        const row = result.rows[0];
 
-      // Format the dates specifically to America/New_York
-      const easternFormatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: "America/New_York",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        fractionalSecondDigits: 3,
-        hour12: false
-      });
+        // Format the dates specifically to America/New_York
+        const easternFormatter = new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/New_York",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          fractionalSecondDigits: 3,
+          hour12: false,
+        });
 
-      // Override the raw Date objects with Eastern string formats if they exist
-      if (row.created) row.created = easternFormatter.format(new Date(row.created));
-      if (row.modified) row.modified = easternFormatter.format(new Date(row.modified));
+        // Override the raw Date objects with Eastern string formats if they exist
+        if (row.created)
+          row.created = easternFormatter.format(new Date(row.created));
+        if (row.modified)
+          row.modified = easternFormatter.format(new Date(row.modified));
 
-      return row;
-    }
+        return row;
+      }
 
       return null;
     } catch (err) {

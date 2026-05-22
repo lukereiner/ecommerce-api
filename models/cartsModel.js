@@ -32,7 +32,7 @@ module.exports = class CartModel {
             const result = await db.query(statement, values);
 
             if (result.rows?.length) {
-                return result.row[0]
+                return result.rows[0]
             }
 
             return null;

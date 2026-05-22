@@ -1,9 +1,11 @@
 const createError = require("http-errors");
 const CartModel = require("../models/cartsModel");
-const CartItemsModel = require("../models/cartItemsModel")
+const CartItemsModel = require("../models/cartItemsModel");
+const ProductModel = require("../models/productsModel");
 
 const CartModelInstance = new CartModel();
 const CartItemsModelInstance = new CartItemsModel();
+const ProductModelInstance = new ProductModel();
 
 module.exports = class CartService {
   async create(userId) {
@@ -23,10 +25,13 @@ module.exports = class CartService {
   async getCartByUser(userId) {
     try {
       const cart = await CartModelInstance.getCartUser(userId);
-
       if (!cart) {
         throw createError(404, "No cart for this user");
       }
+
+      const itemsWithProducts = await CartItemsModelInstance.getCartItemsWithProducts(cart.cartid);
+
+      cart.items = itemsWithProducts;
 
       return cart;
     } catch (err) {
@@ -57,7 +62,7 @@ module.exports = class CartService {
       const itemsToAdd = await CartItemsModelInstance.create(data);
 
       if (!itemsToAdd) {
-        throw createError(404, "No item(s) to add")
+        throw createError(404, "No item(s) to add");
       }
 
       return itemsToAdd;
@@ -72,7 +77,7 @@ module.exports = class CartService {
       const itemsToUpdate = await CartItemsModelInstance.update(data);
 
       if (!itemsToUpdate) {
-        throw createError(404, "Cannot update item")
+        throw createError(404, "Cannot update item");
       }
 
       return itemsToUpdate;

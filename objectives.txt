@@ -25,4 +25,4 @@ Express
 PostgreSQL
 ---
 INSERT INTO products (name, price, description, created, modified)
-VALUES ('PlayStation 2', 199.99, 'Enter a new world of gaming', '2000-11-23', '2001-01-02');
+VALUES ('2006 Honda Accord', 2000.00, 'Relability meets simplicity', '2006-11-22', '2009-06-04'), ('2013 Volkswagen Jetta TDI', 6999.99, 'Efficiency for traveling', '2013-11-22', '2017-08-24'), ('2003 BMW 325xi', 999.99, 'The Ultimate Sunday Cruiser', '2003-11-28', '2006-05-12');
