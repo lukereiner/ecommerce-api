@@ -85,4 +85,19 @@ module.exports = class CartService {
       throw err;
     }
   }
+
+  // delete select items in cart
+  async deleteItems(data) {
+    try {
+      const itemsToDelete = await CartItemsModelInstance.delete(data);
+
+      if (!itemsToDelete) {
+        throw createError(404, "Cannot delete item");
+      }
+
+      return itemsToDelete;
+    } catch (err) {
+      throw err;
+    }
+  }
 };

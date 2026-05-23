@@ -62,7 +62,7 @@ module.exports = class UserModel {
         return null;
 
     } catch(err) {
-        throw new Error(err);
+        throw new Error(err); 
     }
   }
 

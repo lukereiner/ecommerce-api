@@ -26,9 +26,9 @@ module.exports = class CartItemsModel {
   }
 
   // get cart items with product details
-async getCartItemsWithProducts(cartId) {
+  async getCartItemsWithProducts(cartId) {
     try {
-        const statement = `
+      const statement = `
             SELECT 
                 ci.qty, ci.productid,
                 p.name, p.price, p.description
@@ -36,12 +36,12 @@ async getCartItemsWithProducts(cartId) {
             INNER JOIN products p ON ci.productid = p.id
             WHERE ci.cartid = $1
         `;
-        const result = await db.query(statement, [cartId]);
-        return result.rows;
+      const result = await db.query(statement, [cartId]);
+      return result.rows;
     } catch (err) {
-        throw new Error(err);
+      throw new Error(err);
     }
-}
+  }
 
   // update cart
   async update(data) {
@@ -79,6 +79,26 @@ async getCartItemsWithProducts(cartId) {
           row.modified = easternFormatter.format(new Date(row.modified));
 
         return row;
+      }
+
+      return null;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  // delete items in cart
+  async delete(data) {
+    const { cartItemId } = data;
+
+    try {
+      const statement =
+        "DELETE FROM cart_items WHERE id = $1 RETURNING *";
+
+      const result = await db.query(statement, [cartItemId]);
+
+      if (result.rows?.length) {
+        return result.rows[0];
       }
 
       return null;
