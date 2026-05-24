@@ -8,7 +8,7 @@ module.exports = (app) => {
   app.use(express.json());
   app.use("/carts", router);
 
-  router.post("/mine", async (req, res, next) => {
+  router.post("/user/:userId", async (req, res, next) => {
     try {
       const { userId } = req.body;
 
@@ -19,7 +19,7 @@ module.exports = (app) => {
     }
   });
 
-  router.get("/mine", async (req, res, next) => {
+  router.get("/user/:userId", async (req, res, next) => {
     try {
       const { userId } = req.body; // this will change to use auth so other user's carts cannot by viewed by anyone - this doesn't work bc body is data to be sent. Needs to be cleaned up in three files for when auth is added
 
@@ -42,7 +42,9 @@ module.exports = (app) => {
   });
 
   // CART ITEMS MODEL
-  router.post("/mine/items", async (req, res, next) => {
+
+  // Create 
+  router.post("/user/:userId/items", async (req, res, next) => {
     try {
       const data = req.body;
 
@@ -56,7 +58,8 @@ module.exports = (app) => {
     }
   });
 
-  router.patch("/mine/items/:cartItemId", async (req, res, next) => {
+  // Update select item by item ID
+  router.patch("/user/:userId/items/:cartItemId", async (req, res, next) => {
     try {
       const { cartItemId } = req.params;
       const data = req.body;
@@ -68,11 +71,24 @@ module.exports = (app) => {
     }
   })
 
-  router.delete("/mine/items/:cartItemId", async (req, res, next) => {
+  // Delete select item by item ID
+  router.delete("/user/:userId/items/:cartItemId", async (req, res, next) => {
     const { cartItemId } = req.params;
     try {
-      const response = await CartServiceInstance.deleteItems({cartItemId});
-      res.status(204).send(response);
+      const response = await CartServiceInstance.deleteItems({ cartItemId });
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  })
+
+  // Delete all items in cart
+  router.delete("/user/:userId/items", async (req, res, next) => {
+    const { userId } = req.params;
+
+    try {
+      const response = await CartServiceInstance.deleteMyCart({ userId });
+      res.status(204).send();
     } catch (err) {
       next(err);
     }

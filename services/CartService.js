@@ -100,4 +100,17 @@ module.exports = class CartService {
       throw err;
     }
   }
+
+  // Delete all items in cart
+  async deleteMyCart(data) {
+    try {
+      const cartToDelete = await CartItemsModelInstance.deleteCart(data);
+
+      if (!cartToDelete) {
+        throw createError(404, "Cannot delete cart")
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
 };
