@@ -1,7 +1,6 @@
 const createError = require("http-errors");
 const CartModel = require("../models/cartsModel");
 const CartItemsModel = require("../models/cartItemsModel");
-const ProductModel = require("../models/productsModel");
 
 const CartModelInstance = new CartModel();
 const CartItemsModelInstance = new CartItemsModel();
