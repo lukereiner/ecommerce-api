@@ -5,7 +5,6 @@ const ProductModel = require("../models/productsModel");
 
 const CartModelInstance = new CartModel();
 const CartItemsModelInstance = new CartItemsModel();
-const ProductModelInstance = new ProductModel();
 
 module.exports = class CartService {
   async create(data) {
