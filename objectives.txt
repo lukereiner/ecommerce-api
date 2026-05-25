@@ -30,8 +30,8 @@ VALUES ('2006 Honda Accord', 2000.00, 'Relability meets simplicity', '2006-11-22
 INSERT INTO users (password, email, firstname, lastname, created, modified)
 VALUES ('mypassword', 'crhoades@gmail.com', 'Chuck', 'Rhoades', '2026-05-22', '2026-05-22'), ('hah02f0jiv', 'calsurf@yahoo.com', 'Cal', 'Jones', '2026-05-22', '2026-05-22'), ('.,kmi1irj94!@=./e', 'jimtatro@hotmail.com', 'Jimmy', 'Tatro', '2026-05-22', '2026-05-22'), ('19jncn!djJIjdLD-[f]\', 'geraldgreen@gmail.com', 'Gerald', 'Green', '2026-05-22', '2026-05-22');
 
-INSERT INTO cart_items (created, cartid, productid, qty)
-VALUES ('2026-05-22', 8, 5, 2), ('2026-05-23', 7, 10, 1), ('2026-05-24', 4, 7, 11);
+INSERT INTO cart_items (cartid, productid, qty)
+VALUES (8, 5, 2), (7, 10, 1), (4, 7, 11);
 
 INSERT INTO carts (userid)
 VALUES (4);

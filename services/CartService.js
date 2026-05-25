@@ -8,9 +8,9 @@ const CartItemsModelInstance = new CartItemsModel();
 const ProductModelInstance = new ProductModel();
 
 module.exports = class CartService {
-  async create(userId) {
+  async create(data) {
     try {
-      const cart = await CartModelInstance.create(userId);
+      const cart = await CartModelInstance.create(data);
 
       if (!cart) {
         throw createError(404, "No cart in database");
@@ -22,9 +22,9 @@ module.exports = class CartService {
     }
   }
 
-  async getCartByUser(userId) {
+  async getCartByUser(data) {
     try {
-      const cart = await CartModelInstance.getCartUser(userId);
+      const cart = await CartModelInstance.getCartUser(data);
       if (!cart) {
         throw createError(404, "No cart for this user");
       }
@@ -59,10 +59,10 @@ module.exports = class CartService {
   // add items to cart
   async addItems(data) {
     try {
-      const itemsToAdd = await CartItemsModelInstance.create(data);
+      const itemsToAdd = await CartItemsModelInstance.addToCart(data);
 
       if (!itemsToAdd) {
-        throw createError(404, "No item(s) to add");
+        throw createError(404, "No item(s) to add. Check to make sure you do not already have the product you are trying to add.");
       }
 
       return itemsToAdd;

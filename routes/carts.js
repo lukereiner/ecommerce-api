@@ -10,9 +10,9 @@ module.exports = (app) => {
 
   router.post("/user/:userId", async (req, res, next) => {
     try {
-      const { userId } = req.body;
+      const { userId } = req.params;
 
-      const response = await CartServiceInstance.create(userId);
+      const response = await CartServiceInstance.create({userId});
       res.status(201).send(response);
     } catch (err) {
       next(err);
@@ -21,9 +21,9 @@ module.exports = (app) => {
 
   router.get("/user/:userId", async (req, res, next) => {
     try {
-      const { userId } = req.body; // this will change to use auth so other user's carts cannot by viewed by anyone - this doesn't work bc body is data to be sent. Needs to be cleaned up in three files for when auth is added
+      const { userId } = req.params; // this will change to use auth so other user's carts cannot by viewed by anyone - this doesn't work bc body is data to be sent. Needs to be cleaned up in three files for when auth is added
 
-      const response = await CartServiceInstance.getCartByUser(userId);
+      const response = await CartServiceInstance.getCartByUser({userId});
       res.status(200).send(response);
     } catch (err) {
       next(err);
@@ -34,7 +34,7 @@ module.exports = (app) => {
     try {
       const { id } = req.params;
 
-      const response = await CartServiceInstance.getCartById({ id: id });
+      const response = await CartServiceInstance.getCartById({ id });
       res.status(200).send(response);
     } catch (err) {
       next(err);
@@ -43,17 +43,18 @@ module.exports = (app) => {
 
   // CART ITEMS MODEL
 
-  // Create 
+  // Add items for user's cart
   router.post("/user/:userId/items", async (req, res, next) => {
     try {
-      const data = req.body;
+      const { userId } = req.params;
+      const data = { ...req.body, userId };
 
       // Passing as a clean object
       const response = await CartServiceInstance.addItems(data);
 
       res.status(201).send(response);
     } catch (err) {
-      res.status(400).send('The provided Cart ID or Product ID does not exist.')
+      res.status(400).send("No item(s) to add. Check to make sure you do not already have the product you are trying to add.");
       next(err);
     }
   });

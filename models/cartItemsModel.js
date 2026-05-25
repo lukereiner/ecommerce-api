@@ -2,18 +2,26 @@ const db = require("../db/myPool");
 const pgp = require("pg-promise")({ capSQL: true });
 
 module.exports = class CartItemsModel {
-  // create new cart item record
-  async create(data) {
-    const { cartId, productId, qty } = data;
+  // Add items to cart - will reject attempt if item already in cart
+  async addToCart(data) {
+    const { userId, productId, qty } = data;
 
     try {
       const statement = `
-        INSERT INTO cart_items (cartid, productid, qty)
-        VALUES ($1, $2, $3)
-        RETURNING cartid, productid, qty
-        `;
+      INSERT INTO cart_items (cartid, productid, qty)
+      SELECT c.cartid, $2, $3
+      FROM carts c
+      WHERE c.userid = $1
+      AND NOT EXISTS (
+        SELECT 1
+        FROM cart_items ci
+        WHERE ci.cartid = c.cartid
+        AND ci.productid = $2
+      )
+        RETURNING cartid, productid, qty;
+      `;
 
-      const result = await db.query(statement, [cartId, productId, qty]);
+      const result = await db.query(statement, [userId, productId, qty]);
 
       if (result.rows?.length) {
         return result.rows[0];
@@ -21,6 +29,7 @@ module.exports = class CartItemsModel {
 
       return null;
     } catch (err) {
+      console.log('db error: cart already has this product - will not be re-added')
       throw new Error(err);
     }
   }
