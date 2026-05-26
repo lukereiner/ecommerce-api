@@ -106,9 +106,9 @@ module.exports = (app) => {
   router.post("/user/:userId/checkout", async (req, res, next) => {
     try {
       const { userId } = req.params;
-      const { cartId, paymentInfo } = req.body;
+      const { paymentInfo } = req.body;
 
-      const response = await CartServiceInstance.cartCheckout(cartId, userId, paymentInfo);
+      const response = await CartServiceInstance.cartCheckout(userId, paymentInfo);
 
       res.status(200).send(response);
     } catch (err) {

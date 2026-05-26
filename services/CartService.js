@@ -118,8 +118,13 @@ module.exports = class CartService {
   }
 
   // Checkout - create order
-  async cartCheckout(cartId, userId, paymentInfo) {
+  async cartCheckout(userId, paymentInfo) {
     try {
+      console.log('cart service - userId: ', userId);
+      // Use userId to look up cartId to pass to cartItems below
+      const cartId = await CartModelInstance.getCartByUser({userId});
+      console.log('cart service: cartId: ', cartId);
+
       // Retrieve cart items
       const cartItems = await CartItemsModelInstance.getCartItemsWithProducts(cartId);
       
