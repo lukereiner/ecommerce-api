@@ -35,3 +35,6 @@ VALUES (8, 5, 2), (7, 10, 1), (4, 7, 11);
 
 INSERT INTO carts (userid)
 VALUES (4);
+
+INSERT INTO orders (total, status, userid)
+VALUES (29.99, 'completed', 3);

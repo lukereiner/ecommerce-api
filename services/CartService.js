@@ -1,6 +1,7 @@
 const createError = require("http-errors");
 const CartModel = require("../models/cartsModel");
 const CartItemsModel = require("../models/cartItemsModel");
+const OrderModel = require("../models/ordersModel");
 
 const CartModelInstance = new CartModel();
 const CartItemsModelInstance = new CartItemsModel();
@@ -41,13 +42,17 @@ module.exports = class CartService {
     const { id } = data;
 
     try {
-      const cartId = await CartModelInstance.getCartId(id);
+      const cart = await CartModelInstance.getCartId(id);
 
-      if (!cartId) {
+      if (!cart) {
         throw createError(404, "Cart not found");
       }
 
-      return cartId;
+      const itemsWithProducts = await CartItemsModelInstance.getCartItemsWithProducts(cart.cartid);
+
+      cart.items = itemsWithProducts;
+
+      return cart;
     } catch (err) {
       throw err;
     }
@@ -107,6 +112,41 @@ module.exports = class CartService {
       if (!cartToDelete) {
         throw createError(404, "Cannot delete cart")
       }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // Checkout - create order
+  async cartCheckout(cartId, userId, paymentInfo) {
+    try {
+      // Retrieve cart items
+      const cartItems = await CartItemsModelInstance.getCartItemsWithProducts(cartId);
+      
+      // Generate a price for entire cart
+      const totalPrice = cartItems.reduce((total, item) => {
+        return total += Number(item.price);
+      },0)
+
+      // Generate the order
+      const Order = new OrderModel({totalPrice, userId});
+      // Order.addItems(cartItems) add later;
+      await Order.createOrder();
+
+      // Simulating payment processing
+      console.log(`[Payment] Initializing charge of $${totalPrice} for User ${userId}...`);
+      
+      // 3 second delay
+      const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      await delay(2000);
+
+      // Complete simulation of payment processing
+      console.log(`[Payment] Charge successful via simulated gateway.`);
+
+      const updatedOrder = Order.update({ status: 'COMPLETE'});
+
+      return updatedOrder;
+
     } catch (err) {
       throw err;
     }
