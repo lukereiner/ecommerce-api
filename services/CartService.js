@@ -2,6 +2,7 @@ const createError = require("http-errors");
 const CartModel = require("../models/cartsModel");
 const CartItemsModel = require("../models/cartItemsModel");
 const OrderModel = require("../models/ordersModel");
+const { user } = require("pg/lib/defaults");
 
 const CartModelInstance = new CartModel();
 const CartItemsModelInstance = new CartItemsModel();
@@ -123,7 +124,7 @@ module.exports = class CartService {
       console.log('cart service - userId: ', userId);
       // Use userId to look up cartId to pass to cartItems below
       const cartId = await CartModelInstance.getCartByUser({userId});
-      console.log('cart service: cartId: ', cartId);
+      console.log('cart service - cartId: ', cartId);
 
       // Retrieve cart items
       const cartItems = await CartItemsModelInstance.getCartItemsWithProducts(cartId);
@@ -148,7 +149,10 @@ module.exports = class CartService {
       // Complete simulation of payment processing
       console.log(`[Payment] Charge successful via simulated gateway.`);
 
-      const updatedOrder = Order.update({ status: 'COMPLETE'});
+      const updatedOrder = await Order.update({ status: 'COMPLETE'});
+
+      const isCartCleared = await CartItemsModelInstance.deleteCart({userId});
+      console.log('after clearing: ', isCartCleared)
 
       return updatedOrder;
 

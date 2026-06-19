@@ -126,16 +126,17 @@ module.exports = class CartItemsModel {
       USING carts
       WHERE cart_items.cartid = carts.cartId
       AND carts.userid = $1
-      RETURNING *
       `;
 
       const result = await db.query(statement, [userId]);
 
-      if (result.rows?.length) {
+      return result.rowCount > 0;
+
+/*       if (result.rows?.length) {
         return result.rows[0];
       }
 
-      return null;
+      return null; */
     } catch (err) {
       throw new Error(err);
     }
