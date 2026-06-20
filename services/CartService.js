@@ -121,10 +121,8 @@ module.exports = class CartService {
   // Checkout - create order
   async cartCheckout(userId, paymentInfo) {
     try {
-      console.log('cart service - userId: ', userId);
       // Use userId to look up cartId to pass to cartItems below
       const cartId = await CartModelInstance.getCartByUser({userId});
-      console.log('cart service - cartId: ', cartId);
 
       // Retrieve cart items
       const cartItems = await CartItemsModelInstance.getCartItemsWithProducts(cartId);
@@ -152,7 +150,6 @@ module.exports = class CartService {
       const updatedOrder = await Order.update({ status: 'COMPLETE'});
 
       const isCartCleared = await CartItemsModelInstance.deleteCart({userId});
-      console.log('after clearing: ', isCartCleared)
 
       return updatedOrder;
 

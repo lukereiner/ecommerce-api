@@ -116,7 +116,7 @@ module.exports = class CartItemsModel {
     }
   }
 
-  // Delete all items in cart
+  // Delete all items in cart - used to clear cart items after an order has been completed
   async deleteCart(data) {
     const { userId } = data;
 
@@ -130,13 +130,9 @@ module.exports = class CartItemsModel {
 
       const result = await db.query(statement, [userId]);
 
+      // returns true if items were deleted, false if the cart was already empty, as result.rowCount tells how many records were actually deleted
       return result.rowCount > 0;
 
-/*       if (result.rows?.length) {
-        return result.rows[0];
-      }
-
-      return null; */
     } catch (err) {
       throw new Error(err);
     }
