@@ -2,65 +2,89 @@ const db = require("../db/myPool");
 const pgp = require("pg-promise")({ capSQL: true });
 
 module.exports = class CartModel {
-    // create new cart
-    async create(data) {
-        const { userId } = data;
-        try {
-            const statement = `
+  // create new cart
+  async create(data) {
+    const { userId } = data;
+    try {
+      const statement = `
             INSERT INTO carts (userid)
             VALUES ($1)
             RETURNING cartid, userid, created, modified
             `;
 
-            const result = await db.query(statement, [userId]);
+      const result = await db.query(statement, [userId]);
 
-            if (result.rows?.length) {
-                return result.rows[0]
-            }
+      if (result.rows?.length) {
+        return result.rows[0];
+      }
 
-            return null;
-        } catch (err) {
-            throw new Error(err);
-        }
+      return null;
+    } catch (err) {
+      throw new Error(err);
     }
+  }
 
-    // find cart by userID
-    async getCartUser(data) {
-        const { userId } = data;
-        try {
-            const statement = "SELECT * FROM carts WHERE userid = $1"
-            const values = [userId];
+  // find cart by userID
+  async getCartUser(data) {
+    const { userId } = data;
+    try {
+      const statement = "SELECT * FROM carts WHERE userid = $1";
+      const values = [userId];
 
-            const result = await db.query(statement, values);
+      const result = await db.query(statement, values);
 
-            if (result.rows?.length) {
-                return result.rows[0]
-            }
+      if (result.rows?.length) {
+        return result.rows[0];
+      }
 
-            return null;
-        } catch (err) {
-            throw new Error(err);
-        }
+      return null;
+    } catch (err) {
+      throw new Error(err);
     }
+  }
 
-    // find cart by cartID
-    async getCartId(id) {
-        try {
-            const statement = "SELECT * FROM carts WHERE cartid = $1";
-            const values = [id];
+  async getCartByUser(data) {
+    const { userId } = data;
 
-            const result = await db.query(statement, values);
+    console.log("Carts Model: userId: ", userId);
 
-            if (result.rows?.length) {
-                return result.rows[0];
-            }
+    try {
+      const statement = `
+            SELECT cartid
+            FROM carts
+            WHERE userid = $1
+            `;
+      const value = [userId];
 
-            return null;
+      const result = await db.query(statement, value);
 
-        } catch (err) {
-            throw new Error(err);
-        }
+      if (result.rows?.length) {
+        return result.rows[0].cartid;
+      }
+
+      return null;
+    } catch (err) {
+      throw new Error(err);
     }
-}
+  }
+
+  // find cart by cartID
+  async getCartId(id) {
+    try {
+      const statement = "SELECT * FROM carts WHERE cartid = $1";
+      const values = [id];
+
+      const result = await db.query(statement, values);
+
+      if (result.rows?.length) {
+        return result.rows[0];
+      }
+
+      return null;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+};
 
 // POST /cart/{id}/items - will add when cart_items table routes are being written

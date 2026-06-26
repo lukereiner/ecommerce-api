@@ -12,7 +12,7 @@ module.exports = (app) => {
     try {
       const { userId } = req.params;
 
-      const response = await CartServiceInstance.create({userId});
+      const response = await CartServiceInstance.create({ userId });
       res.status(201).send(response);
     } catch (err) {
       next(err);
@@ -23,7 +23,7 @@ module.exports = (app) => {
     try {
       const { userId } = req.params; // this will change to use auth so other user's carts cannot by viewed by anyone - this doesn't work bc body is data to be sent. Needs to be cleaned up in three files for when auth is added
 
-      const response = await CartServiceInstance.getCartByUser({userId});
+      const response = await CartServiceInstance.getCartByUser({ userId });
       res.status(200).send(response);
     } catch (err) {
       next(err);
@@ -54,7 +54,11 @@ module.exports = (app) => {
 
       res.status(201).send(response);
     } catch (err) {
-      res.status(400).send("No item(s) to add. Check to make sure you do not already have the product you are trying to add.");
+      res
+        .status(400)
+        .send(
+          "No item(s) to add. Check to make sure you do not already have the product you are trying to add.",
+        );
       next(err);
     }
   });
@@ -65,12 +69,15 @@ module.exports = (app) => {
       const { cartItemId } = req.params;
       const data = req.body;
 
-      const response = await CartServiceInstance.updateItems({ cartItemId, ...data })
+      const response = await CartServiceInstance.updateItems({
+        cartItemId,
+        ...data,
+      });
       res.status(200).send(response);
     } catch (err) {
       next(err);
     }
-  })
+  });
 
   // Delete select item by item ID
   router.delete("/user/:userId/items/:cartItemId", async (req, res, next) => {
@@ -81,7 +88,7 @@ module.exports = (app) => {
     } catch (err) {
       next(err);
     }
-  })
+  });
 
   // Delete all items in cart
   router.delete("/user/:userId/items", async (req, res, next) => {
@@ -93,5 +100,19 @@ module.exports = (app) => {
     } catch (err) {
       next(err);
     }
-  })
+  });
+
+  // Checkout
+  router.post("/user/:userId/checkout", async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const { paymentInfo } = req.body;
+
+      const response = await CartServiceInstance.cartCheckout(userId, paymentInfo);
+
+      res.status(200).send(response);
+    } catch (err) {
+      next(err);
+    }
+  });
 };

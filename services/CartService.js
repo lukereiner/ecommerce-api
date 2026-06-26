@@ -1,9 +1,13 @@
 const createError = require("http-errors");
 const CartModel = require("../models/cartsModel");
 const CartItemsModel = require("../models/cartItemsModel");
+const OrderModel = require("../models/ordersModel");
+const { user } = require("pg/lib/defaults");
+const OrderItemsModel = require("../models/orderItemsModel");
 
 const CartModelInstance = new CartModel();
 const CartItemsModelInstance = new CartItemsModel();
+const OrderItemsModelInstance = new OrderItemsModel();
 
 module.exports = class CartService {
   async create(data) {
@@ -41,13 +45,17 @@ module.exports = class CartService {
     const { id } = data;
 
     try {
-      const cartId = await CartModelInstance.getCartId(id);
+      const cart = await CartModelInstance.getCartId(id);
 
-      if (!cartId) {
+      if (!cart) {
         throw createError(404, "Cart not found");
       }
 
-      return cartId;
+      const itemsWithProducts = await CartItemsModelInstance.getCartItemsWithProducts(cart.cartid);
+
+      cart.items = itemsWithProducts;
+
+      return cart;
     } catch (err) {
       throw err;
     }
@@ -107,6 +115,70 @@ module.exports = class CartService {
       if (!cartToDelete) {
         throw createError(404, "Cannot delete cart")
       }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // Checkout - create order
+  async cartCheckout(userId, paymentInfo) {
+    try {
+      // Use userId to look up cartId to pass to cartItems below
+      const cartId = await CartModelInstance.getCartByUser({userId});
+
+      // Retrieve cart items
+      const cartItems = await CartItemsModelInstance.getCartItemsWithProducts(cartId);
+
+      // Check for items before proceeding with order
+      if (!cartItems || cartItems.length === 0) {
+        throw createError(400, 'Cannot proceed to checkout: cart is empty.')
+      }
+      
+      // Generate a price for entire cart
+      const totalPrice = cartItems.reduce((total, item) => {
+        return total += Number(item.price);
+      },0)
+
+      // Generate the order
+      const Order = new OrderModel({totalPrice, userId});
+      Order.addItems(cartItems);
+
+      // Capture created order object from DB
+      const savedOrder = await Order.createOrder();
+
+      // Assign new generated db ID to active order
+      Order.id = savedOrder.id;
+
+      // Simulating payment processing
+      console.log(`[Payment] Initializing charge of $${totalPrice} for User ${userId}...`);
+      
+      // 3 second delay
+      const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      await delay(2000);
+
+      // Complete simulation of payment processing
+      console.log(`[Payment] Charge successful via simulated gateway.`);
+
+      const updatedOrder = await Order.update({ id: Order.id, status: 'COMPLETE'});
+      console.log('here is the updated order object before it gets mapped: ', updatedOrder)
+
+      if (updatedOrder.status === 'COMPLETE') {
+        // Map array elemtns to fit database model
+        const orderItemsData = cartItems.map(item => ({
+          orderId: updatedOrder.id,
+          productId: item.productid,
+          quantity: item.qty,
+          price: Number(item.price)
+        }));
+
+        const generateOrderItems = await OrderItemsModelInstance.create(orderItemsData);
+        console.log('here are the generated order items: ', generateOrderItems);
+      }
+
+      const isCartCleared = await CartItemsModelInstance.deleteCart({userId});
+
+      return updatedOrder;
+
     } catch (err) {
       throw err;
     }
