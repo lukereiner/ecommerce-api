@@ -56,10 +56,13 @@ module.exports = class OrderModel {
   async update(data) {
     try {
       console.log("Logging update data from orders model:", data);
-      const condition = pgp.as.format("WHERE userid = ${id} RETURNING *", {
-        id: this.userid,
+      const condition = pgp.as.format("WHERE id = ${id} RETURNING *", {
+        id: data.id,
       });
-      const statement = pgp.helpers.update(data, null, "orders") + condition;
+
+      const { id, ...updateFields } = data;
+
+      const statement = pgp.helpers.update(updateFields, null, "orders") + condition;
 
       const result = await db.query(statement);
 

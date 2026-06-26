@@ -128,6 +128,11 @@ module.exports = class CartService {
 
       // Retrieve cart items
       const cartItems = await CartItemsModelInstance.getCartItemsWithProducts(cartId);
+
+      // Check for items before proceeding with order
+      if (!cartItems || cartItems.length === 0) {
+        throw createError(400, 'Cannot proceed to checkout: cart is empty.')
+      }
       
       // Generate a price for entire cart
       const totalPrice = cartItems.reduce((total, item) => {
@@ -137,7 +142,12 @@ module.exports = class CartService {
       // Generate the order
       const Order = new OrderModel({totalPrice, userId});
       Order.addItems(cartItems);
-      await Order.createOrder();
+
+      // Capture created order object from DB
+      const savedOrder = await Order.createOrder();
+
+      // Assign new generated db ID to active order
+      Order.id = savedOrder.id || savedOrder.orderid;
 
       // Simulating payment processing
       console.log(`[Payment] Initializing charge of $${totalPrice} for User ${userId}...`);
@@ -149,7 +159,7 @@ module.exports = class CartService {
       // Complete simulation of payment processing
       console.log(`[Payment] Charge successful via simulated gateway.`);
 
-      const updatedOrder = await Order.update({ status: 'COMPLETE'});
+      const updatedOrder = await Order.update({ id: Order.id, status: 'COMPLETE'});
       console.log('here is the updated order object before it gets mapped: ', updatedOrder)
 
       if (updatedOrder.status === 'COMPLETE') {
