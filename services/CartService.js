@@ -3,9 +3,11 @@ const CartModel = require("../models/cartsModel");
 const CartItemsModel = require("../models/cartItemsModel");
 const OrderModel = require("../models/ordersModel");
 const { user } = require("pg/lib/defaults");
+const OrderItemsModel = require("../models/orderItemsModel");
 
 const CartModelInstance = new CartModel();
 const CartItemsModelInstance = new CartItemsModel();
+const OrderItemsModelInstance = new OrderItemsModel();
 
 module.exports = class CartService {
   async create(data) {
@@ -134,7 +136,7 @@ module.exports = class CartService {
 
       // Generate the order
       const Order = new OrderModel({totalPrice, userId});
-      // Order.addItems(cartItems) add later;
+      Order.addItems(cartItems);
       await Order.createOrder();
 
       // Simulating payment processing
@@ -148,6 +150,20 @@ module.exports = class CartService {
       console.log(`[Payment] Charge successful via simulated gateway.`);
 
       const updatedOrder = await Order.update({ status: 'COMPLETE'});
+      console.log('here is the updated order object before it gets mapped: ', updatedOrder)
+
+      if (updatedOrder.status === 'COMPLETE') {
+        // Map array elemtns to fit database model
+        const orderItemsData = cartItems.map(item => ({
+          orderId: updatedOrder.id,
+          productId: item.productid,
+          quantity: item.qty,
+          price: Number(item.price)
+        }));
+
+        const generateOrderItems = await OrderItemsModelInstance.create(orderItemsData);
+        console.log('here are the generated order items: ', generateOrderItems);
+      }
 
       const isCartCleared = await CartItemsModelInstance.deleteCart({userId});
 

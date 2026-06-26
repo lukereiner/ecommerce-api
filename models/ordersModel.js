@@ -1,5 +1,6 @@
 const db = require("../db/myPool");
 const pgp = require("pg-promise")({ capSQL: true });
+const OrderItem = require('./orderItemsModel');
 
 module.exports = class OrderModel {
   constructor(data = {}) {
@@ -10,7 +11,7 @@ module.exports = class OrderModel {
   }
 
   addItems(items) {
-    // will add items to OrderItem object - 5.26.26 14:32
+    this.items = items.map(item => new OrderItem(item));
   }
 
   // Retrieve all orders
