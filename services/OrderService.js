@@ -1,7 +1,10 @@
 const createError = require("http-errors");
 const OrderModel = require("../models/ordersModel");
+const OrderItemsModel = require("../models/orderItemsModel");
+const { user } = require("pg/lib/defaults");
 
 const OrderModelInstance = new OrderModel();
+const OrderItemsModelInstance = new OrderItemsModel();
 
 module.exports = class OrderService {
   // Retrieve all orders from ORDERS table
@@ -17,7 +20,22 @@ module.exports = class OrderService {
     } catch (err) {
       throw err;
     }
-  };
+  }
 
-  
+  // Get all user's orders with items within each order
+  async listAllOrders(data) {
+    const { userId } = data;
+    try {
+      const ordersWithItems =
+        await OrderModelInstance.findByUserWithItems(userId);
+
+      if (!ordersWithItems || ordersWithItems.length === 0) {
+        throw createError(404, "No orders found for this user.");
+      }
+
+      return ordersWithItems;
+    } catch (err) {
+      throw err;
+    }
+  }
 };

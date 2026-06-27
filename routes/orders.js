@@ -17,12 +17,23 @@ module.exports = (app) => {
     }
   });
 
+  router.get("/user/:userId", async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+
+      const response = await OrderServiceInstance.listAllOrders({ userId });
+      res.status(200).send(response);
+    } catch (err) {
+      next(err);
+    }
+  });
+
   router.post("/user/:userId", async (req, res, next) => {
     try {
-        const { userId } = req.params;
-        const data = { ...req.body, userId, paymentInfo };
+      const { userId } = req.params;
+      const data = { ...req.body, userId, paymentInfo };
     } catch (err) {
-        next(err)
+      next(err);
     }
-  })
+  });
 };

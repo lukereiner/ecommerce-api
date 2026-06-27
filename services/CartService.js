@@ -147,7 +147,7 @@ module.exports = class CartService {
       const savedOrder = await Order.createOrder();
 
       // Assign new generated db ID to active order
-      Order.id = savedOrder.id || savedOrder.orderid;
+      Order.id = savedOrder.id;
 
       // Simulating payment processing
       console.log(`[Payment] Initializing charge of $${totalPrice} for User ${userId}...`);

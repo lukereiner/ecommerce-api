@@ -46,8 +46,6 @@ module.exports = class CartModel {
   async getCartByUser(data) {
     const { userId } = data;
 
-    console.log("Carts Model: userId: ", userId);
-
     try {
       const statement = `
             SELECT cartid
