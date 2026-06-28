@@ -38,4 +38,20 @@ module.exports = class OrderService {
       throw err;
     }
   }
+
+  async getByOrderId(data) {
+    const { id } = data;
+
+    try {
+      const orderItems = await OrderModelInstance.findByOrderId(id);
+
+      if (!orderItems) {
+        throw createError(404, 'Order not found');
+      }
+
+      return orderItems;
+    } catch (err) {
+      throw err;
+    }
+  }
 };
