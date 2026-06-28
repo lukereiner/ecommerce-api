@@ -160,7 +160,6 @@ module.exports = class CartService {
       console.log(`[Payment] Charge successful via simulated gateway.`);
 
       const updatedOrder = await Order.update({ id: Order.id, status: 'COMPLETE'});
-      console.log('here is the updated order object before it gets mapped: ', updatedOrder)
 
       if (updatedOrder.status === 'COMPLETE') {
         // Map array elemtns to fit database model
@@ -172,7 +171,6 @@ module.exports = class CartService {
         }));
 
         const generateOrderItems = await OrderItemsModelInstance.create(orderItemsData);
-        console.log('here are the generated order items: ', generateOrderItems);
       }
 
       const isCartCleared = await CartItemsModelInstance.deleteCart({userId});

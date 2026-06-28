@@ -113,4 +113,20 @@ module.exports = class OrderModel {
       throw new Error(err);
     }
   }
+
+  async findByOrderId(id) {
+    try {
+      const statement = 'SELECT * FROM orders WHERE id = $1';
+
+      const result = await db.query(statement, [id]);
+
+      if (result.rows?.length) {
+        return result.rows[0];
+      }
+
+      return null;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 };
