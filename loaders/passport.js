@@ -36,5 +36,27 @@ module.exports = (app) => {
                 }
             }
         )
-    )
+    );
+
+    // Serialize user (Determines what data is aved in the session cookie)
+    passport.serializeUser((user, done) => {
+        done(null, user.id); // stores only th euser ID in the cookie session
+    });
+
+    // Deserialize user - Read ID from cookie, fetch full usere details from DB
+    passport.deserializeUser(async (id, done) => {
+        try {
+            const user = await UserModelInstance.findUserById(id);
+
+            if (!user) {
+                return done(null, false);
+            }
+
+            // Strip password for security so req.user is clean through requests in app
+            const { password, ...cleanUser } = user;
+            done(null, cleanUser); // Attach user object to 'req.user'
+        } catch (err) {
+            done(err);
+        }
+    })
 }

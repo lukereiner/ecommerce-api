@@ -5,7 +5,7 @@ const UserModelInstance = new UserModel();
 
 module.exports = class AuthService {
     async register(data) {
-        const { email, password } = data;
+        const { email, password, firstname, lastname } = data;
 
         try {
             // Check if user exists
@@ -22,7 +22,9 @@ module.exports = class AuthService {
             // Prep data, save to DB
             const newUser = await UserModelInstance.create({
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                firstname,
+                lastname
             });
 
             if (newUser) {
