@@ -162,7 +162,7 @@ module.exports = class CartService {
       const updatedOrder = await Order.update({ id: Order.id, status: 'COMPLETE'});
 
       if (updatedOrder.status === 'COMPLETE') {
-        // Map array elemtns to fit database model
+        // Map array elements to fit database model
         const orderItemsData = cartItems.map(item => ({
           orderId: updatedOrder.id,
           productId: item.productid,

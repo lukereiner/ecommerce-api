@@ -38,9 +38,9 @@ module.exports = (app) => {
         )
     );
 
-    // Serialize user (Determines what data is aved in the session cookie)
+    // Serialize user (Determines what data is saved in the session cookie)
     passport.serializeUser((user, done) => {
-        done(null, user.id); // stores only th euser ID in the cookie session
+        done(null, user.id); // stores only the user ID in the cookie session
     });
 
     // Deserialize user - Read ID from cookie, fetch full usere details from DB

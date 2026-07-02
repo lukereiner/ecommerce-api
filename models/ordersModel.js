@@ -55,7 +55,6 @@ module.exports = class OrderModel {
   // Update order from checkout
   async update(data) {
     try {
-      console.log("Logging update data from orders model:", data);
       const condition = pgp.as.format("WHERE id = ${id} RETURNING *", {
         id: data.id,
       });
