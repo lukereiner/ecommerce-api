@@ -84,5 +84,3 @@ module.exports = class CartModel {
     }
   }
 };
-
-// POST /cart/{id}/items - will add when cart_items table routes are being written

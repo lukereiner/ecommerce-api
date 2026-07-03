@@ -23,7 +23,7 @@ module.exports = class OrderService {
   }
 
   // Get all user's orders with items within each order
-  async listAllOrders(data) {
+  async listUserOrders(data) {
     const { userId } = data;
     try {
       const ordersWithItems =

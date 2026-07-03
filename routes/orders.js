@@ -21,7 +21,7 @@ module.exports = (app) => {
     try {
       const { userId } = req.params;
 
-      const response = await OrderServiceInstance.listAllOrders({ userId });
+      const response = await OrderServiceInstance.listUserOrders({ userId });
       res.status(200).send(response);
     } catch (err) {
       next(err);
@@ -38,13 +38,4 @@ module.exports = (app) => {
       next(err);
     }
   })
-
-  router.post("/user/:userId", async (req, res, next) => {
-    try {
-      const { userId } = req.params;
-      const data = { ...req.body, userId, paymentInfo };
-    } catch (err) {
-      next(err);
-    }
-  });
 };

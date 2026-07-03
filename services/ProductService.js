@@ -12,7 +12,9 @@ module.exports = class ProductService {
         throw createError(404, "No products in database");
       }
 
-      return products;
+      const cleanProducts = products.map(( { created, modified, ...rest } ) => rest);
+
+      return cleanProducts;
     } catch (err) {
       throw err;
     }
