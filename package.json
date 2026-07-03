@@ -4,10 +4,14 @@
   "description": "- Javascript - Git & GitHub - Command line - Express - PostgreSQL",
   "main": "server.js",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.2.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "http-errors": "^2.0.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.20.0",
     "pg-promise": "^12.6.2"
   },

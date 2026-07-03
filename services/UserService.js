@@ -35,6 +35,24 @@ module.exports = class UserService {
     }
   }
 
+  async findByEmail(data) {
+    const { email } = data;
+
+    try {
+      // Check if email exists
+      const email = await UserModelInstance.findUserByEmail(email);
+
+      // If email doesn't exist, reject
+      if (!email) {
+        throw createError(404, "Email not found");
+      }
+
+      return email;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async update(data) {
     try {
       // Check if user already exists

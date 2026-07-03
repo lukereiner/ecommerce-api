@@ -24,11 +24,11 @@ Command line
 Express
 PostgreSQL
 ---
-INSERT INTO products (name, price, description, created, modified)
-VALUES ('2026 Honda Pilot', 44000.00, 'Relability meets simplicity', '2025-11-22', '2026-06-04'), ('2023 Ford Focus', 17999.99, 'Efficiency for traveling', '2023-11-22', '2024-08-24'), ('1995 Pontiac Cruiser', 1999.99, 'The Ultimate Sunday Cruiser', '1995-11-28', '2006-05-12');
+INSERT INTO products (name, price, description)
+VALUES ('2026 Honda Pilot', 44000.00, 'Relability meets simplicity'), ('2023 Ford Focus', 17999.99, 'Efficiency for traveling'), ('1995 Pontiac Cruiser', 1999.99, 'The Ultimate Sunday Cruiser');
 
-INSERT INTO users (password, email, firstname, lastname, created, modified)
-VALUES ('mypassword', 'crhoades@gmail.com', 'Chuck', 'Rhoades', '2026-05-22', '2026-05-22'), ('hah02f0jiv', 'calsurf@yahoo.com', 'Cal', 'Jones', '2026-05-22', '2026-05-22'), ('.,kmi1irj94!@=./e', 'jimtatro@hotmail.com', 'Jimmy', 'Tatro', '2026-05-22', '2026-05-22'), ('19jncn!djJIjdLD-[f]\', 'geraldgreen@gmail.com', 'Gerald', 'Green', '2026-05-22', '2026-05-22');
+INSERT INTO users (password, email, firstname, lastname)
+VALUES ('mypassword', 'crhoades@gmail.com', 'Chuck', 'Rhoades'), ('hah02f0jiv', 'calsurf@yahoo.com', 'Cal', 'Jones'), ('.,kmi1irj94!@=./e', 'jimtatro@hotmail.com', 'Jimmy', 'Tatro'), ('19jncn!djJIjdLD-[f]\', 'geraldgreen@gmail.com', 'Gerald', 'Green');
 
 INSERT INTO cart_items (cartid, productid, qty)
 VALUES (4, 5, 2), (4, 3, 12), (4, 1, 11);
