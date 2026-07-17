@@ -70,7 +70,7 @@ module.exports = class CartService {
       const itemsToAdd = await CartItemsModelInstance.addToCart(data);
 
       if (!itemsToAdd) {
-        throw createError(404, "No item(s) to add. Check to make sure you do not already have the product you are trying to add.");
+        throw createError(400, "No item(s) to add. Check to make sure you do not already have the product you are trying to add.");
       }
 
       return itemsToAdd;
