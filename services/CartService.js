@@ -31,11 +31,13 @@ module.exports = class CartService {
         throw createError(404, "No cart for this user");
       }
 
+      const { created, modified, ...cleanCart } = cart;
+
       const itemsWithProducts = await CartItemsModelInstance.getCartItemsWithProducts(cart.cartid);
 
-      cart.items = itemsWithProducts;
+      cleanCart.items = itemsWithProducts;
 
-      return cart;
+      return cleanCart;
     } catch (err) {
       throw err;
     }

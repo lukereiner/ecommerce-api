@@ -263,7 +263,43 @@ paths:
                 '200':
                     description: Cart successfully retrieved.
                     content:
-                        
+                        application/json:
+                            example:
+                                cartid: 8
+                                userid: 3
+                                items:
+                                    qty: 11
+                                    productid: 1
+                                    name: "PlayStation 2"
+                                    price: "199.99"
+                                    description: "Enter a new world of gaming"
+                '404':
+                    description: No cart for this user.
+        post:
+            summary: Create cart for user
+            description: Create a new cart associated with the specified user ID
+            tags:
+                - Carts
+            parameters:
+                - name: userId
+                  in: path
+                  description: The ID of the user to create a cart for
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                '201':
+                    description: Cart successfully created.
+                    content:
+                        application/json:
+                            example:
+                                cartid: 13
+                                userid: 15
+                                created: "2026-07-17T01:41:29.001Z"
+                                modified: "2026-07-17T01:41:29.001Z"
+                '404':
+                    description: No cart in database
+
 
 
 components:
