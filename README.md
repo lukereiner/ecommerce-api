@@ -24,7 +24,6 @@ The goal of this project is to provide a secure, scalable, and fully functional 
 - **Database:** [PostgreSQL](https://www.postgresql.org/)
 - **Authentication:** [Passport.js](https://www.passportjs.org/)
 - **Package Manager:** `npm`
-- **Testing (Optional / Recommended):** [Jest](https://jestjs.io/) & [Supertest](https://github.com/ladjs/supertest)
 
 ---
 
@@ -45,19 +44,19 @@ The goal of this project is to provide a secure, scalable, and fully functional 
 ### Prerequisites
 
 - **Node.js** (v18+ recommended)
-- **PostgreSQL** installed and running locally or hosted remotely
+- **PostgreSQL** installed and running locally
 
 ### 1. Installation
 
 Clone the repository and install dependencies:
 
 ```bash
-git clone [https://github.com/lukereiner/ecommerce-api.git](https://github.com/lukereiner/ecommerce-api.git)
+git clone https://github.com/lukereiner/ecommerce-api.git
 cd ecommerce-api
 npm install
 ```
 ### 2. Environment Variables Setup
-Create a .env file in the root directory (make sure this file remains in .gitignore):
+Create a .env file in the root directory:
 
 ```bash
 PORT=3000
