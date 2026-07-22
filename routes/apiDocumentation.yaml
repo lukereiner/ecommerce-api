@@ -452,5 +452,4 @@ paths:
                     description: Not Found. User or cart could not be found.
                 '500':
                     description: Internal Server Error. Database or payment failure.
-
-    /auth/register:
+                    
