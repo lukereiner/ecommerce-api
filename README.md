@@ -2,7 +2,7 @@
 
 A robust RESTful backend API built with **Node.js**, **Express**, **PostgreSQL**, and **Passport.js**. 
 
-This repository serves as **Part 1 (Backend Core)** of a full-fledged e-commerce platform project for Codecademy. It provides complete backend functionality for user authentication, product catalog management, cart handling, order processing, and checkout workflows.
+This repository serves as **Part 1 (Backend)** of a full-fledged e-commerce platform project for Codecademy. It provides complete backend functionality for user authentication, product catalog management, cart handling, order processing, and checkout workflows.
 
 ---
 
